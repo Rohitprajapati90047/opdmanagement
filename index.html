@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPD managment system</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul class="nav-list">
+            <div class="logo"><img src="./asset/logo.jpg" alt="logo"></div>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#service">Service</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+        <div class="enqery">
+            <img src="./asset/call.jpg" alt="call" class="call-icon">
+            <a href="google.com">1800 5884 552</a>
+        </div>
+        <div class="login-btn">
+            <img src="./asset/user.png" alt="no found">
+            <a href="login.html"><input type="button" value=" Login" /></a>
+        </div>
+
+
+    </nav>
+    <div class="Dborder"></div>
+
+    <div class="slider">
+        <div class="slides">
+            <div class="slide">
+                <img src="./asset/slide-1.jpg" alt="Image 1">
+                <div class="slide-text">Welcome to OPD Management</div>
+            </div>
+            <div class="slide">
+                <img src="./asset/slide-2.jpg" alt="Image 2">
+                <div class="slide-text">Book Your Appointment Online</div>
+            </div>
+            <div class="slide">
+                <img src="./asset/Designer (1).jpeg" alt="Image 3">
+                <div class="slide-text">Efficient Patient Care System</div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="section1"></div>
+    <div class="section2"></div>
+
+    <!-- dashboard with pi chart  -->
+    <div class="dashboard">
+        <div class="card">
+            <h2>Total Visits</h2>
+            <p id="visits">0</p>
+        </div>
+        <div class="card">
+            <h2>Total Registrations</h2>
+            <p id="registrations">0</p>
+        </div>
+        <div class="card">
+            <h2>Total Hospitals</h2>
+            <p id="hospitals">0</p>
+        </div>
+    </div>
+    
+    <div class="charts">
+        <canvas id="visitsChart"></canvas>
+        <canvas id="registrationsChart"></canvas>
+        <canvas id="hospitalsChart"></canvas>
+    </div>
+
+    <footer class="footer-info">
+
+    </footer>
+    
+    <footer class="copy-right">
+        9500 Euclid Avenue, Cleveland, Ohio 44195 | 800.223.2273 | © 2025 Cleveland Clinic. All Rights Reserved.
+    </footer>
+
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>
