@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,13 +32,16 @@
             </div>
 
             <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="Enter 10-digit number">
+            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="Enter 10-digit number" oninput="formatPhoneNumber()">
 
             <label for="aadhaar">Aadhaar Number</label>
-            <input type="text" id="aadhaar" name="aadhaar" required pattern="[0-9]{12}" maxlength="12" placeholder="Enter 12-digit Aadhaar" oninput="generateUsername()">
+            <input type="text" id="aadhaar" name="aadhaar" required pattern="[0-9]{12}" maxlength="12" placeholder="Enter 12-digit Aadhaar">
 
             <label for="username">Generated Username</label>
             <input type="text" id="username" name="username" readonly>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
 
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required minlength="6">
@@ -71,32 +74,26 @@
     <script>
     function generateUsername() {
         let fname = document.getElementById("fname").value.trim().toUpperCase();
-        let aadhaar = document.getElementById("aadhaar").value.trim();
         let today = new Date();
-        let day = ("0" + today.getDate()).slice(-2); // Get current day (DD)
-        let month = ("0" + (today.getMonth() + 1)).slice(-2); // Get current month (MM)
-        let year = today.getFullYear().toString(); // Get full year (YYYY)
+        let day = ("0" + today.getDate()).slice(-2); 
+        let month = ("0" + (today.getMonth() + 1)).slice(-2); 
+        let year = today.getFullYear().toString().slice(-2); 
+        let randomNum = Math.floor(100 + Math.random() * 900); // 3-digit random number
 
-        if (fname.length >= 3 && aadhaar.length >= 4) {
-            let username = fname.substring(0, 3) + aadhaar.substring(0, 4) + day + month + year;
+        if (fname.length >= 3) {
+            let username = fname.substring(0, 3) + randomNum + day + month + year;
             document.getElementById("username").value = username;
         }
     }
-    
+
+    function formatPhoneNumber() {
+        let phoneField = document.getElementById("phone");
+        phoneField.value = phoneField.value.replace(/\D/g, "").slice(0, 10);
+    }
+
     function validateForm() {
-        let aadhaar = document.getElementById("aadhaar").value;
         let password = document.getElementById("password").value;
         let confirmPassword = document.getElementById("confirm_password").value;
-
-        if (aadhaar.length !== 12) {
-            alert("Aadhaar number must be 12 digits.");
-            return false;
-        }
-        
-        if (password.length < 6) {
-            alert("Password must be at least 6 characters long.");
-            return false;
-        }
 
         if (password !== confirmPassword) {
             alert("Passwords do not match!");
@@ -108,9 +105,7 @@
 
     document.getElementById("registerForm").addEventListener("submit", function (event) {
         let username = document.getElementById("username").value;
-        if (username) {
-            alert(`Your generated username is: ${username}`);
-        } else {
+        if (!username) {
             event.preventDefault();
             alert("Please fill in all details to generate your username.");
         }

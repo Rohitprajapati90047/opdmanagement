@@ -1,8 +1,9 @@
 <?php
-$servername = "localhost"; // Change if using a different host
-$username = "root"; // Your MySQL username
-$password = ""; // Your MySQL password
-$database = "opd_management"; // Database name
+include 'db_connect.php';
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "opd_management";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $database);
@@ -49,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Check if Aadhaar or Username already exists
-    $checkQuery = "SELECT * FROM users WHERE aadhaar = ? OR username = ?";
+    $checkQuery = "SELECT * FROM patient WHERE aadhaar = ? OR username = ?";
     $stmt = $conn->prepare($checkQuery);
     $stmt->bind_param("ss", $aadhaar, $username);
     $stmt->execute();
@@ -60,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Insert data into database
-    $query = "INSERT INTO users (fname, lname, dob, gender, phone, aadhaar, username, password, address, disease) 
+    $query = "INSERT INTO patient (fname, lname, dob, gender, phone, aadhaar, username, password, address, disease) 
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($query);

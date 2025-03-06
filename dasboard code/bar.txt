@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="card">
+            <h2>Total Visits</h2>
+            <p id="visits">0</p>
+        </div>
+        <div class="card">
+            <h2>Total Registrations</h2>
+            <p id="registrations">0</p>
+        </div>
+    </div>
+    
+    <canvas id="chart"></canvas>
+    
+    <script>
+        let lastVisits = 100;
+        let lastRegistrations = 50;
+
+        async function fetchDashboardData() {
+            lastVisits += Math.floor(Math.random() * 20 - 10); // Fluctuates within ±10
+            lastVisits = Math.max(50, Math.min(500, lastVisits)); // Keeps within range
+
+            lastRegistrations += Math.floor(Math.random() * 10 - 5); // Fluctuates within ±5
+            lastRegistrations = Math.max(20, Math.min(200, lastRegistrations)); // Keeps within range
+
+            return {
+                visits: lastVisits,
+                registrations: lastRegistrations,
+                chartData: [
+                    { date: '2025-02-20', visits: 50 },
+                    { date: '2025-02-21', visits: 80 },
+                    { date: '2025-02-22', visits: 120 },
+                    { date: '2025-02-23', visits: lastVisits }
+                ]
+            };
+        }
+
+        async function updateDashboard() {
+            const data = await fetchDashboardData();
+            document.getElementById("visits").textContent = data.visits;
+            document.getElementById("registrations").textContent = data.registrations;
+            
+            const canvas = document.getElementById("chart");
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext("2d");
+            if (window.chartInstance instanceof Chart) {
+                window.chartInstance.destroy();
+            }
+            window.chartInstance = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: data.chartData.map(item => item.date),
+                    datasets: [{
+                        label: "Visits",
+                        data: data.chartData.map(item => item.visits),
+                        backgroundColor: "#4CAF50"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 500
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", updateDashboard);
+    </script>
+</body>
+</html>

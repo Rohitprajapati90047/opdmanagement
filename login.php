@@ -3,7 +3,7 @@ session_start();
 $host = "localhost";
 $user = "root";
 $password = "";
-$database = "opd_db";
+$database = "opd_management";
 
 // Connect to database
 $conn = mysqli_connect($host, $user, $password, $database);
@@ -11,19 +11,38 @@ if (!$conn) {
     die("Database connection failed: " . mysqli_connect_error());
 }
 
-// Get username & password from form
-$username = $_POST['username'];
+// Get input values
+$input = $_POST['username']; // Can be Username OR Aadhaar
 $password = $_POST['password'];
 
-// Check user in database
-$sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
-$result = mysqli_query($conn, $sql);
-if (mysqli_num_rows($result) > 0) {
-    $_SESSION['username'] = $username;
-    header("Location: dashboard.php"); // Redirect after login
+// Check if input is Aadhaar (12-digit number) or Username
+if (preg_match("/^[0-9]{12}$/", $input)) {
+    $sql = "SELECT * FROM patient WHERE aadhaar = ?";
 } else {
-    echo "<script>alert('Invalid Credentials!'); window.location.href='login.html';</script>";
+    $sql = "SELECT * FROM patient WHERE username = ?";
 }
 
-mysqli_close($conn);
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $input);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Verify login
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+
+    // Verify Password
+    if (password_verify($password, $row['password'])) {
+        $_SESSION['username'] = $row['username'];
+        $_SESSION['aadhaar'] = $row['aadhaar'];
+        header("Location: dashboard.php"); // Redirect after login
+    } else {
+        echo "<script>alert('Invalid Password!'); window.location.href='login.html';</script>";
+    }
+} else {
+    echo "<script>alert('Invalid Username or Aadhaar!'); window.location.href='login.html';</script>";
+}
+
+$stmt->close();
+$conn->close();
 ?>
